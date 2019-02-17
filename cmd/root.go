@@ -31,7 +31,6 @@ package cmd
 
 import (
 	"fmt"
-	"log"
 	"os"
 
 	homedir "github.com/mitchellh/go-homedir"
@@ -130,6 +129,6 @@ func initConfig() {
 	viper.AutomaticEnv()
 
 	if err := viper.ReadInConfig(); err != nil {
-		log.Printf("Error while loading config file: %s", viper.ConfigFileUsed())
+		app.ErrorLog.Printf("Error while loading config file: %s", viper.ConfigFileUsed())
 	}
 }

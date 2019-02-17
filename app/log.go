@@ -27,12 +27,14 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package main
+package app
 
 import (
-	"github.com/timorunge/aliyun-oss-downloader/cmd"
+	"log"
+	"os"
 )
 
-func main() {
-	cmd.Execute()
-}
+var (
+	InfoLog  = log.New(os.Stdout, "", log.LstdFlags)
+	ErrorLog = log.New(os.Stderr, "", log.LstdFlags)
+)

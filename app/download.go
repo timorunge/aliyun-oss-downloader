@@ -30,7 +30,6 @@
 package app
 
 import (
-	"log"
 	"os"
 	"path/filepath"
 
@@ -47,7 +46,7 @@ const (
 )
 
 func downloadLogger(ossBucket *oss.Bucket, ossObject oss.ObjectProperties, objectStatus string) {
-	log.Printf("%s %s %s %d", ossBucket.BucketName, objectStatus, ossObject.Key, ossObject.Size)
+	InfoLog.Printf("%s %s %s %d", ossBucket.BucketName, objectStatus, ossObject.Key, ossObject.Size)
 }
 
 func downloadOssObject(semaphore *golimit.GoLimit, ossBucket *oss.Bucket, ossObject oss.ObjectProperties, objectStatus string) {
@@ -56,12 +55,12 @@ func downloadOssObject(semaphore *golimit.GoLimit, ossBucket *oss.Bucket, ossObj
 	_, err := os.Stat(absDir)
 	if os.IsNotExist(err) {
 		if err := os.MkdirAll(absDir, 0755); err != nil {
-			log.Printf("Cannot create directory %s: %v", absDir, err)
+			ErrorLog.Printf("Cannot create directory %s: %v", absDir, err)
 		}
 	}
 
 	if err = ossBucket.GetObjectToFile(ossObject.Key, localFile.AbsPath); err != nil {
-		log.Printf("Cannot download object %s to local file %s: %v", ossObject.Key, localFile.AbsPath, err)
+		ErrorLog.Printf("Cannot download object %s to local file %s: %v", ossObject.Key, localFile.AbsPath, err)
 	}
 	defer semaphore.Done()
 	downloadLogger(ossBucket, ossObject, objectStatus)
@@ -75,11 +74,11 @@ func Download() {
 	if _, err := os.Stat(destinationDir); err != nil {
 		if createDestinationDir == true {
 			if err := os.MkdirAll(destinationDir, 0755); err != nil {
-				log.Printf("Cannot create destination directory %s: %v", destinationDir, err)
+				ErrorLog.Printf("Cannot create destination directory %s: %v", destinationDir, err)
 				os.Exit(1)
 			}
 		} else {
-			log.Printf("Local destination directory %s is not existing: %v", destinationDir, err)
+			ErrorLog.Printf("Local destination directory %s is not existing: %v", destinationDir, err)
 			os.Exit(1)
 		}
 	}
@@ -89,14 +88,14 @@ func Download() {
 	region := viper.GetString("region")
 	client, err := oss.New(OssEndpoint(region), accessKeyID, accessKeySecret)
 	if err != nil {
-		log.Printf("Cannot connect to Aliyun OSS API: %v", err)
+		ErrorLog.Printf("Cannot connect to Aliyun OSS API: %v", err)
 		os.Exit(1)
 	}
 
 	bucket := viper.GetString("bucket")
 	ossBucket, err := client.Bucket(bucket)
 	if err != nil {
-		log.Printf("Cannot get the specified bucket %s instance: %v", bucket, err)
+		ErrorLog.Printf("Cannot get the specified bucket %s instance: %v", bucket, err)
 		os.Exit(1)
 	}
 
@@ -107,7 +106,7 @@ func Download() {
 	for {
 		resp, err := ossBucket.ListObjects(oss.Marker(marker), oss.MaxKeys(maxKeys))
 		if err != nil {
-			log.Printf("Cannot list objects in bucket %s: %v", bucket, err)
+			ErrorLog.Printf("Cannot list objects in bucket %s: %v", bucket, err)
 		}
 		for _, ossObject := range resp.Objects {
 			if ossObject.Size > 0 {
