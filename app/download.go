@@ -39,6 +39,7 @@ import (
 )
 
 const (
+	statusFailed  string = "FAILED"
 	statusGet     string = "GET"
 	statusSkip    string = "SKIP"
 	statusUnknown string = "UNKNOWN"
@@ -60,8 +61,10 @@ func downloadOssObject(semaphore *golimit.GoLimit, ossBucket *oss.Bucket, ossObj
 	}
 
 	if err = ossBucket.GetObjectToFile(ossObject.Key, localFile.AbsPath); err != nil {
+		objectStatus = statusFailed
 		ErrorLog.Printf("Cannot download %s to %s: %v", ossObject.Key, localFile.AbsPath, err)
 	}
+
 	defer semaphore.Done()
 	downloadLogger(ossBucket, ossObject, objectStatus)
 }

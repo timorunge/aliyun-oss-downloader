@@ -27,23 +27,9 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package cmd
+package app
 
-import (
-	"fmt"
-
-	"github.com/spf13/cobra"
-	"github.com/timorunge/aliyun-oss-downloader/app"
+// Global version definition
+const (
+	Version string = "0.2.0"
 )
-
-var versionCmd = &cobra.Command{
-	Use:   "version",
-	Short: "Version",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("Aliyun OSS Downloader v%s.", app.Version)
-	},
-}
-
-func init() {
-	rootCmd.AddCommand(versionCmd)
-}
