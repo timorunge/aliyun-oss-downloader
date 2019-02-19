@@ -13,14 +13,6 @@ to get the latest version.
 go get -u github.com/timorunge/aliyun-oss-downloader
 ```
 
-Afterwards you can use `go install` to compile and install
-`aliyun-oss-downloader` into your `$GOPATH/bin`.
-
-```sh
-cd $GOPATH/src/github.com/timorunge/aliyun-oss-downloader
-go install
-```
-
 ## Configuration
 
 Since `aliyun-oss-downloader` is based on

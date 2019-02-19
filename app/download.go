@@ -60,7 +60,7 @@ func downloadOssObject(semaphore *golimit.GoLimit, ossBucket *oss.Bucket, ossObj
 	}
 
 	if err = ossBucket.GetObjectToFile(ossObject.Key, localFile.AbsPath); err != nil {
-		ErrorLog.Printf("Cannot download object %s to local file %s: %v", ossObject.Key, localFile.AbsPath, err)
+		ErrorLog.Printf("Cannot download %s to %s: %v", ossObject.Key, localFile.AbsPath, err)
 	}
 	defer semaphore.Done()
 	downloadLogger(ossBucket, ossObject, objectStatus)
@@ -99,12 +99,13 @@ func Download() {
 		os.Exit(1)
 	}
 
+	prefix := viper.GetString("prefix")
 	marker := viper.GetString("marker")
 	maxKeys := viper.GetInt("maxKeys")
 	threads := viper.GetInt("threads")
 	semaphore := golimit.New(threads)
 	for {
-		resp, err := ossBucket.ListObjects(oss.Marker(marker), oss.MaxKeys(maxKeys))
+		resp, err := ossBucket.ListObjects(oss.Prefix(prefix), oss.Marker(marker), oss.MaxKeys(maxKeys))
 		if err != nil {
 			ErrorLog.Printf("Cannot list objects in bucket %s: %v", bucket, err)
 		}

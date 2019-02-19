@@ -41,22 +41,23 @@ import (
 
 const (
 	defaultCreateDestinationDir bool   = false
+	defaultMaxKeys              int    = 250
 	defaultRegion               string = "eu-central-1"
 	defaultThreads              int    = 5
-	defaultMaxKeys              int    = 250
 )
 
 var (
 	accessKeyID          string
 	accessKeySecret      string
 	bucket               string
-	createDestinationDir bool = defaultCreateDestinationDir
 	cfgFile              string
+	createDestinationDir = defaultCreateDestinationDir
 	destinationDir       string
 	marker               string
-	maxKeys              int    = defaultMaxKeys
-	region               string = defaultRegion
-	threads              int    = defaultThreads
+	maxKeys              = defaultMaxKeys
+	prefix               string
+	region               = defaultRegion
+	threads              = defaultThreads
 )
 
 var rootCmd = &cobra.Command{
@@ -67,6 +68,7 @@ It copies new and modified files.`,
 	Run: func(cmd *cobra.Command, args []string) { app.Download() },
 }
 
+// Execute adds all child commands to the root command and sets flags appropriately.
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
@@ -103,6 +105,9 @@ func init() {
 
 	rootCmd.PersistentFlags().IntVarP(&maxKeys, "maxKeys", "", maxKeys, "The amount of objects which are fetched in a single request")
 	viper.BindPFlag("maxKeys", rootCmd.PersistentFlags().Lookup("maxKeys"))
+
+	rootCmd.PersistentFlags().StringVarP(&prefix, "prefix", "", prefix, "The prefix to filter objects in the bucket")
+	viper.BindPFlag("prefix", rootCmd.PersistentFlags().Lookup("prefix"))
 
 	rootCmd.PersistentFlags().StringVarP(&region, "region", "r", region, "The name of the OSS region in which you have stored your bucket")
 	viper.BindPFlag("region", rootCmd.PersistentFlags().Lookup("region"))

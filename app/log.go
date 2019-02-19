@@ -34,6 +34,7 @@ import (
 	"os"
 )
 
+// InfoLog and ErrorLog are providing a general logging facility.
 var (
 	InfoLog  = log.New(os.Stdout, "", log.LstdFlags)
 	ErrorLog = log.New(os.Stderr, "", log.LstdFlags)
