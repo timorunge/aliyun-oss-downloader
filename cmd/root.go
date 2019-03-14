@@ -62,7 +62,7 @@ var (
 
 var rootCmd = &cobra.Command{
 	Use:   "aliyun-oss-downloader",
-	Short: "Downlaods all objects from an Aliyun OSS bucket.",
+	Short: "Downloads all objects from an Aliyun OSS bucket.",
 	Long: `aliyun-oss-downloader downloads all objects from an Aliyun OSS bucket to a defined local destination.
 It copies new and modified files.`,
 	Run: func(cmd *cobra.Command, args []string) { app.Download() },
