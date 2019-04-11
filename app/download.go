@@ -32,6 +32,7 @@ package app
 import (
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 	golimit "github.com/lenaten/go-limit"
@@ -41,6 +42,7 @@ import (
 const (
 	statusFailed  string = "FAILED"
 	statusGet     string = "GET"
+	statusIgnore  string = "IGNORE"
 	statusSkip    string = "SKIP"
 	statusUnknown string = "UNKNOWN"
 	statusUpdate  string = "UPDATE"
@@ -102,9 +104,10 @@ func Download() {
 		os.Exit(1)
 	}
 
-	prefix := viper.GetString("prefix")
+	ignorePattern := viper.GetString("ignorePattern")
 	marker := viper.GetString("marker")
 	maxKeys := viper.GetInt("maxKeys")
+	prefix := viper.GetString("prefix")
 	threads := viper.GetInt("threads")
 	semaphore := golimit.New(threads)
 	for {
@@ -113,7 +116,18 @@ func Download() {
 			ErrorLog.Printf("Cannot list objects in bucket %s: %v", bucket, err)
 		}
 		for _, ossObject := range resp.Objects {
-			if ossObject.Size > 0 {
+			ignoreObject := false
+			if len(ignorePattern) > 0 {
+				ignorePatterns := strings.Split(ignorePattern, ",")
+				for pattern := range ignorePatterns {
+					ignoreObject = strings.Contains(ossObject.Key, ignorePatterns[pattern])
+					if ignoreObject {
+						downloadLogger(ossBucket, ossObject, statusIgnore)
+						break
+					}
+				}
+			}
+			if ignoreObject == false && ossObject.Size > 0 {
 				localFile, _ := LocalFile(ossObject)
 				switch localFile.Exists {
 				case true:

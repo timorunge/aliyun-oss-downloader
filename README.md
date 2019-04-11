@@ -1,5 +1,7 @@
 # aliyun-oss-downloader
 
+[![](https://goreportcard.com/badge/github.com/timorunge/aliyun-oss-downloader)](https://goreportcard.com/report/github.com/timorunge/aliyun-oss-downloader)
+
 `aliyun-oss-downloader` is a simple CLI tool written in Go for downloading
 all objects from an [Aliyun OSS](https://www.alibabacloud.com/product/oss)
 bucket.
@@ -59,8 +61,10 @@ Flags:
       --createDestinationDir     Create the (local) destination directory if not existing
       --destinationDir string    The (local) destination directory
   -h, --help                     help for aliyun-oss-downloader
+      --ignorePattern string     The ignore pattern to exclude objects from the bucket; seperate multiple patterns via ","
       --marker string            The marker to start the download
       --maxKeys int              The amount of objects which are fetched in a single request (default 250)
+      --prefix string            The prefix to filter objects in the bucket
   -r, --region string            The name of the OSS region in which you have stored your bucket (default "eu-central-1")
       --threads int              The amount of threads to use (default 5)
 
