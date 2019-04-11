@@ -60,8 +60,8 @@ Flags:
       --config string            Config file (default "$HOME/.aliyun-oss-downloader.yaml")
       --createDestinationDir     Create the (local) destination directory if not existing
       --destinationDir string    The (local) destination directory
+      --exclude strings          If a object is containing the string(s) it will be excluded from the download; can be called multiple times
   -h, --help                     help for aliyun-oss-downloader
-      --ignorePattern string     The ignore pattern to exclude objects from the bucket; seperate multiple patterns via ","
       --marker string            The marker to start the download
       --maxKeys int              The amount of objects which are fetched in a single request (default 250)
       --prefix string            The prefix to filter objects in the bucket

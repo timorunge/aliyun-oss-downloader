@@ -40,12 +40,12 @@ import (
 )
 
 const (
-	statusFailed  string = "FAILED"
-	statusGet     string = "GET"
-	statusIgnore  string = "IGNORE"
-	statusSkip    string = "SKIP"
-	statusUnknown string = "UNKNOWN"
-	statusUpdate  string = "UPDATE"
+	statusExcluded string = "EXCLUDED"
+	statusFailed   string = "FAILED"
+	statusGet      string = "GET"
+	statusSkip     string = "SKIP"
+	statusUnknown  string = "UNKNOWN"
+	statusUpdate   string = "UPDATE"
 )
 
 func downloadLogger(ossBucket *oss.Bucket, ossObject oss.ObjectProperties, objectStatus string) {
@@ -104,7 +104,7 @@ func Download() {
 		os.Exit(1)
 	}
 
-	ignorePattern := viper.GetString("ignorePattern")
+	exclude := viper.GetStringSlice("exclude")
 	marker := viper.GetString("marker")
 	maxKeys := viper.GetInt("maxKeys")
 	prefix := viper.GetString("prefix")
@@ -116,18 +116,17 @@ func Download() {
 			ErrorLog.Printf("Cannot list objects in bucket %s: %v", bucket, err)
 		}
 		for _, ossObject := range resp.Objects {
-			ignoreObject := false
-			if len(ignorePattern) > 0 {
-				ignorePatterns := strings.Split(ignorePattern, ",")
-				for pattern := range ignorePatterns {
-					ignoreObject = strings.Contains(ossObject.Key, ignorePatterns[pattern])
-					if ignoreObject {
-						downloadLogger(ossBucket, ossObject, statusIgnore)
+			excludeObject := false
+			if len(exclude) > 0 {
+				for _, str := range exclude {
+					excludeObject = strings.Contains(ossObject.Key, str)
+					if excludeObject {
+						downloadLogger(ossBucket, ossObject, statusExcluded)
 						break
 					}
 				}
 			}
-			if ignoreObject == false && ossObject.Size > 0 {
+			if excludeObject == false && ossObject.Size > 0 {
 				localFile, _ := LocalFile(ossObject)
 				switch localFile.Exists {
 				case true:

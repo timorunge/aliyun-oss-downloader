@@ -53,7 +53,7 @@ var (
 	cfgFile              string
 	createDestinationDir = defaultCreateDestinationDir
 	destinationDir       string
-	ignorePattern        string
+	exclude              []string
 	marker               string
 	maxKeys              = defaultMaxKeys
 	prefix               string
@@ -101,8 +101,8 @@ func init() {
 	viper.BindPFlag("destinationDir", rootCmd.PersistentFlags().Lookup("destinationDir"))
 	rootCmd.MarkFlagRequired("destinationDir")
 
-	rootCmd.PersistentFlags().StringVarP(&ignorePattern, "ignorePattern", "", ignorePattern, "The ignore pattern to exclude objects from the bucket; seperate multiple patterns via \",\"")
-	viper.BindPFlag("ignorePattern", rootCmd.PersistentFlags().Lookup("ignorePattern"))
+	rootCmd.PersistentFlags().StringSliceVarP(&exclude, "exclude", "", exclude, "If a object is containing the string(s) it will be excluded from the download; can be called multiple times")
+	viper.BindPFlag("exclude", rootCmd.PersistentFlags().Lookup("exclude"))
 
 	rootCmd.PersistentFlags().StringVarP(&marker, "marker", "", marker, "The marker to start the download")
 	viper.BindPFlag("marker", rootCmd.PersistentFlags().Lookup("marker"))
