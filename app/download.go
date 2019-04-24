@@ -90,8 +90,9 @@ func Download() {
 
 	accessKeyID := viper.GetString("accessKeyID")
 	accessKeySecret := viper.GetString("accessKeySecret")
+	disableTLS := viper.GetBool("disableTLS")
 	region := viper.GetString("region")
-	client, err := oss.New(OssEndpoint(region), accessKeyID, accessKeySecret)
+	client, err := oss.New(OssEndpoint(region, disableTLS), accessKeyID, accessKeySecret)
 	if err != nil {
 		ErrorLog.Printf("Cannot connect to Aliyun OSS API: %v", err)
 		os.Exit(1)

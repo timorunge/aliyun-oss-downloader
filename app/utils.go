@@ -39,13 +39,19 @@ import (
 )
 
 const (
-	ossEndpoint = "https://oss-%s.aliyuncs.com"
+	httpSchema  = "http"
+	httpsSchema = "https"
+	ossEndpoint = "%s://oss-%s.aliyuncs.com"
 )
 
 // OssEndpoint returns the endpoint which will be used for the client
 // connection.
-func OssEndpoint(region string) string {
-	return fmt.Sprintf(ossEndpoint, region)
+func OssEndpoint(region string, disableTLS bool) string {
+	scheme := httpsSchema
+	if disableTLS {
+		scheme = httpSchema
+	}
+	return fmt.Sprintf(ossEndpoint, scheme, region)
 }
 
 // LocalFileInfo denotes required information for the local files.

@@ -37,6 +37,8 @@ import (
 
 func TestOssEndPoint(t *testing.T) {
 	region := "eu-central-1"
-	ossEndpoint := OssEndpoint(region)
-	assert.Equal(t, ossEndpoint, "https://oss-eu-central-1.aliyuncs.com")
+	httpOssEndpoint := OssEndpoint(region, true)
+	assert.Equal(t, httpOssEndpoint, "http://oss-eu-central-1.aliyuncs.com")
+	httpsOssEndpoint := OssEndpoint(region, false)
+	assert.Equal(t, httpsOssEndpoint, "https://oss-eu-central-1.aliyuncs.com")
 }
