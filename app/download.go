@@ -32,7 +32,7 @@ package app
 import (
 	"os"
 	"path/filepath"
-	"strings"
+	"regexp"
 
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 	golimit "github.com/lenaten/go-limit"
@@ -105,7 +105,7 @@ func Download() {
 		os.Exit(1)
 	}
 
-	exclude := viper.GetStringSlice("exclude")
+	exclude := viper.GetString("exclude")
 	marker := viper.GetString("marker")
 	maxKeys := viper.GetInt("maxKeys")
 	prefix := viper.GetString("prefix")
@@ -118,13 +118,10 @@ func Download() {
 		}
 		for _, ossObject := range resp.Objects {
 			excludeObject := false
-			if len(exclude) > 0 {
-				for _, str := range exclude {
-					excludeObject = strings.Contains(ossObject.Key, str)
-					if excludeObject {
-						downloadLogger(ossBucket, ossObject, statusExcluded)
-						break
-					}
+			if exclude != "" {
+				excludeObject, _ = regexp.MatchString(exclude, ossObject.Key)
+				if excludeObject {
+					downloadLogger(ossBucket, ossObject, statusExcluded)
 				}
 			}
 			if excludeObject == false && ossObject.Size > 0 {

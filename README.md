@@ -61,7 +61,7 @@ Flags:
       --createDestinationDir     Create the (local) destination directory if not existing
       --destinationDir string    The (local) destination directory
       --disableTLS               Use a HTTP connection instead of a HTTP over TLS (HTTPS) connection
-      --exclude strings          If a object is containing the string(s) it will be excluded from the download; can be called multiple times
+      --exclude string           Regex for excluding items from the download
   -h, --help                     help for aliyun-oss-downloader
       --marker string            The marker to start the download
       --maxKeys int              The amount of objects which are fetched in a single request (default 250)

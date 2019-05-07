@@ -55,7 +55,7 @@ var (
 	createDestinationDir = defaultCreateDestinationDir
 	destinationDir       string
 	disableTLS           = defaultDisableTLS
-	exclude              []string
+	exclude              string
 	marker               string
 	maxKeys              = defaultMaxKeys
 	prefix               string
@@ -106,7 +106,7 @@ func init() {
 	rootCmd.PersistentFlags().BoolVarP(&disableTLS, "disableTLS", "", disableTLS, "Use a HTTP connection instead of a HTTP over TLS (HTTPS) connection")
 	viper.BindPFlag("disableTLS", rootCmd.PersistentFlags().Lookup("disableTLS"))
 
-	rootCmd.PersistentFlags().StringSliceVarP(&exclude, "exclude", "", exclude, "If a object is containing the string(s) it will be excluded from the download; can be called multiple times")
+	rootCmd.PersistentFlags().StringVarP(&exclude, "exclude", "", exclude, "Regex for excluding items from the download")
 	viper.BindPFlag("exclude", rootCmd.PersistentFlags().Lookup("exclude"))
 
 	rootCmd.PersistentFlags().StringVarP(&marker, "marker", "", marker, "The marker to start the download")
